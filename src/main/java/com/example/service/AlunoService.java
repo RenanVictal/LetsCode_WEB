@@ -4,7 +4,8 @@ import com.example.dto.AlunoRequest;
 import com.example.dto.AlunoResponse;
 import com.example.mapper.AlunoMapper;
 import com.example.model.Aluno;
-import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+// import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
+import com.example.repository.AlunoRepository;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -19,17 +20,20 @@ import java.util.Optional;
 
 public class AlunoService {
     private final AlunoMapper mapper;
+    private final AlunoRepository repository;
 
     public List<AlunoResponse> retrieveAll() {
         log.info("Listing Alunos");
-        final List<Aluno> listOfAlunos = Aluno.listAll();
+        // final List<Aluno> listOfAlunos = Aluno.listAll();
+        final List<Aluno> listOfAlunos = repository.listAll();
         return  mapper.toResponse(listOfAlunos);
     }
 
     public AlunoResponse getById(int id) {
         log.info("Getting Aluno id-{}", id);
 
-        Aluno aluno = Aluno.findById(id);
+        // Aluno aluno = Aluno.findById(id);
+        Aluno aluno = repository.findById(id);
         return mapper.toResponse(aluno);
     }
 
@@ -43,7 +47,8 @@ public class AlunoService {
                 .name(alunoRequest.getName())
                 .build();
 
-        entity.persistAndFlush();
+        // entity.persistAndFlush();
+        repository.persistAndFlush(entity);
 
         return mapper.toResponse(entity);
     }
@@ -53,7 +58,8 @@ public class AlunoService {
 
         log.info("Updating Aluno id - {}, data - {}", id, alunoRequest);
 
-        Optional<Aluno> aluno = Aluno.findByIdOptional(id);
+        // Optional<Aluno> aluno = Aluno.findByIdOptional(id);
+        Optional<Aluno> aluno = repository.findByIdOptional(id);
 
         if (aluno.isPresent()) {
             var entity = aluno.get();
@@ -68,6 +74,8 @@ public class AlunoService {
     @Transactional
     public void delete(int id) {
         log.info("Deleting Aluno id - {}", id);
-        Aluno.findByIdOptional(id).ifPresent(PanacheEntityBase::delete);
+        // Aluno.findByIdOptional(id).ifPresent(PanacheEntityBase::delete);
+        Optional<Aluno> aluno = repository.findByIdOptional(id);
+        aluno.ifPresent(repository::delete);
     }
 }
