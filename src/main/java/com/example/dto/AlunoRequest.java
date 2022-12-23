@@ -13,5 +13,7 @@ import lombok.NoArgsConstructor;
 @NoArgsConstructor
 @JsonIgnoreProperties
 public class AlunoRequest {
+
+    @NoteBlank(message = "É necessário um nome")
     private String name;
 }

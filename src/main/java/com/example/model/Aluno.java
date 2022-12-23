@@ -21,6 +21,7 @@ public class Aluno extends PanacheEntityBase {
     @Column(name = "aluno_id")
     private Integer id;
 
+    @NotBlank(message = "É necessário adicionar um nome")
     @Column(name = "aluno_name", nullable = false)
     private String name;
 }
