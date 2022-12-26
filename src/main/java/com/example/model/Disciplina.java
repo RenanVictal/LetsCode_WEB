@@ -1,6 +1,5 @@
 package com.example.model;
 
-// import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -10,29 +9,33 @@ import javax.persistence.*;
 import javax.validation.constraints.NotBlank;
 import java.time.LocalDateTime;
 
-
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "ALUNOS_Renan")
+@Table(name = "DISCIPLINA_Renan")
+public class Disciplina {
 
-public class Aluno {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "aluno_id")
+    @Column(name = "disciplina_id")
     private Integer id;
 
-    @NotBlank(message = "É necessário adicionar um nome")
-    @Column(name = "aluno_name", nullable = false)
+    @NotBlank(message = "Name must be not empty or null")
+    @Column(name = "disciplina_name", nullable = false)
     private String name;
 
     @Column(name="data_atualizacao", nullable = false)
     private LocalDateTime dateTime;
 
+    @OneToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "titular", unique = true)
+    private Professor titular;
+
     @PrePersist
     public void prePersist(){
         setDateTime(LocalDateTime.now());
     }
+
 }
