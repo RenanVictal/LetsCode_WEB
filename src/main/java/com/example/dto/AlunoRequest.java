@@ -6,6 +6,8 @@ import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
+import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Data
 @Builder
@@ -14,6 +16,6 @@ import lombok.NoArgsConstructor;
 @JsonIgnoreProperties
 public class AlunoRequest {
 
-    @NoteBlank(message = "É necessário adicionar um nome")
+    @NotBlank(message = "É necessário adicionar um nome")
     private String name;
 }

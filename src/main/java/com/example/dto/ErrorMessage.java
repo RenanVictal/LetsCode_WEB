@@ -1,7 +1,7 @@
 package com.example.dto;
 
-
 import com.fasterxml.jackson.annotation.JsonIgnoreProperties;
+import com.fasterxml.jackson.annotation.JsonInclude;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
@@ -12,8 +12,12 @@ import lombok.NoArgsConstructor;
 @AllArgsConstructor
 @NoArgsConstructor
 @JsonIgnoreProperties
-public class AlunoResponse {
-    private int id;
-    private String name;
-    private String dateTime;
+public class ErrorMessage {
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String field;
+
+    @JsonInclude(JsonInclude.Include.NON_NULL)
+    private String message;
+
 }

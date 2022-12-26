@@ -6,14 +6,17 @@ import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
+import java.time.LocalDateTime;
+
 import javax.persistence.*;
+import javax.validation.constraints.NotBlank;
 
 @Builder
 @Data
 @AllArgsConstructor
 @NoArgsConstructor
 @Entity
-@Table(name = "ALUNOS")
+@Table(name = "ALUNOS_Renan")
 
 public class Aluno extends PanacheEntityBase {
     @Id
@@ -24,4 +27,12 @@ public class Aluno extends PanacheEntityBase {
     @NotBlank(message = "É necessário adicionar um nome")
     @Column(name = "aluno_name", nullable = false)
     private String name;
+
+    @Column(name="data_atualizacao", nullable = false)
+    private LocalDateTime dateTime;
+
+    @PrePersist
+    public void prePersist(){
+        setDateTime(LocalDateTime.now());
+    }
 }
