@@ -31,8 +31,14 @@ public class Aluno {
     @Column(name="data_atualizacao", nullable = false)
     private LocalDateTime dateTime;
 
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name="tutor")
+    private Professor tutor;
+
     @PrePersist
     public void prePersist(){
         setDateTime(LocalDateTime.now());
     }
+
+    
 }

@@ -86,4 +86,15 @@ public class AlunoResource {
                 .build();
     }
 
+    @PATCH
+    @Path("/{id}/tutor/{idProfessor}")
+    public Response updateTutor(@PathParam("id") int idAluno, @PathParam("idProfessor") int idProfessor) {
+        final var response = service.updateTutor(idAluno, idProfessor);
+
+        return Response
+                .status(Response.Status.CREATED)
+                .entity(response)
+                .build();
+    }
+
 }

@@ -2,6 +2,8 @@ package com.example;
 
 import com.example.dto.ErrorResponse;
 import com.example.dto.ProfessorRequest;
+import com.example.service.AlunoService;
+import com.example.service.DisciplinaService;
 import com.example.service.ProfessorService;
 import lombok.RequiredArgsConstructor;
 
@@ -17,6 +19,8 @@ import javax.ws.rs.core.Response;
 public class ProfessorResource {
 
     private final ProfessorService service;
+    private final DisciplinaService disciplinaService;
+    private final AlunoService alunoService;
 
     @GET
     public Response listProfessors() {
@@ -81,5 +85,23 @@ public class ProfessorResource {
         return Response
                 .status(Response.Status.NO_CONTENT)
                 .build();
+    }
+
+    @GET
+    @Path("/{id}/disciplina")
+    public Response getDisciplina(@PathParam("id") int id) {
+
+        final var response =disciplinaService.getDisciplinaByProfessorId(id);
+
+        return Response.ok(response).build();
+    }
+
+    @GET
+    @Path("/{id}/tutorados")
+    public Response getTutorados(@PathParam("id") int id) {
+
+        final var response = alunoService.getTutoradosByProfessorId(id);
+
+        return Response.ok(response).build();
     }
 }

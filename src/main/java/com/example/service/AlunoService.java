@@ -3,10 +3,13 @@ import com.example.mapper.AlunoMapper;
 import com.example.model.Aluno;
 import com.example.dto.AlunoRequest;
 import com.example.dto.AlunoResponse;
-
+import com.example.dto.TutorResponse;
+import com.example.exception.InvalidStateException;
 import com.example.exception.NotAllowedNameExcption;
 // import io.quarkus.hibernate.orm.panache.PanacheEntityBase;
 import com.example.repository.AlunoRepository;
+import com.example.repository.ProfessorRepository;
+
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 
@@ -26,6 +29,7 @@ import java.util.Optional;
 public class AlunoService {
     private final AlunoMapper mapper;
     private final AlunoRepository repository;
+    private final ProfessorRepository professorRepository;
 
     public List<AlunoResponse> retrieveAll() {
         log.info("Listing Alunos");
@@ -65,7 +69,6 @@ public class AlunoService {
     }
 
     @Transactional
-
     public AlunoResponse update(int id, @Valid AlunoRequest alunoRequest) {
 
         Objects.requireNonNull(alunoRequest, "É necessário adicionar um nome");
@@ -83,10 +86,44 @@ public class AlunoService {
     }
 
     @Transactional
+    public TutorResponse updateTutor(int idAluno, int idProfessor) {
+
+        log.info("Updating titular disciplina-id: {}, professor-id: {}", idAluno, idProfessor);
+
+        //find entities
+        var aluno = repository.findById(idAluno);
+        var professor = professorRepository.findById(idProfessor);
+
+        //validate is not empty
+        if (Objects.isNull(aluno)) throw new EntityNotFoundException("Aluno not found");
+        if (Objects.isNull(professor)) throw new EntityNotFoundException("Professor not found");
+
+        //verify if Professor has no Disciplina
+
+        //Update
+        aluno.setTutor(professor);;
+        repository.persist(aluno);
+
+        return mapper.toResponse(professor);
+    }
+
+    @Transactional
     public void delete(int id) {
         log.info("Deleting Aluno id - {}", id);
         // Aluno.findByIdOptional(id).ifPresent(PanacheEntityBase::delete);
         Optional<Aluno> aluno = repository.findByIdOptional(id);
         aluno.ifPresent(repository::delete);
+    }
+
+    public List<AlunoResponse> getTutoradosByProfessorId(int idProfessor) {
+
+        log.info("Getting tutorados by professor-id: {}", idProfessor);
+
+        var professor = professorRepository.findById(idProfessor);
+        if (Objects.isNull(professor)) throw new EntityNotFoundException("Professor not found");
+
+        List<Aluno> listOfEntities = repository.getTutoradosByProfessor(professor);
+
+        return mapper.toResponse(listOfEntities);
     }
 }
